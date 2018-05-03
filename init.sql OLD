@@ -1,0 +1,35 @@
+CREATE TABLE `users` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `discord_id` BIGINT UNSIGNED NOT NULL,
+  `username` VARCHAR(128) NOT NULL,
+  `discriminator` INT UNSIGNED NOT NULL,
+  `bot` BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (`id`),
+  UNIQUE `users_discord_id_uniq` (`discord_id`),
+  INDEX `users_username_index` (`username`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `messages` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `message_id` BIGINT UNSIGNED NOT NULL,
+  `channel_id` BIGINT UNSIGNED NOT NULL,
+  `author` INT UNSIGNED NOT NULL,
+  `text` TEXT NOT NULL,
+  `created_at`datetime NOT NULL,
+  `edited_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `messages_author_index` (`author`),
+  FOREIGN KEY (`author`) REFERENCES `users`(`id`) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE `channels` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `channel_id` BIGINT UNSIGNED NOT NULL,
+  `guild` TEXT NOT NULL,
+  `name` TEXT NOT NULL,
+  `type` TEXT NOT NULL,
+  PRIMARY KEY(id),
+  INDEX `channels_id_index` (`id`),
+  INDEX `channel_id` (`channel_id`),
+  UNIQUE `channel_id_2` (`channel_id`)
+) ENGINE = InnoDB;

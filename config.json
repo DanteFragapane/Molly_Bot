@@ -1,0 +1,12 @@
+{
+  "botAccount": true,
+  "token": "MjQ5OTQ3ODI2NTE4MzYwMDY1.DYrzsg.Ae0DkKttb_7R90VdmAm1qdPSImU",
+  "limit": 10,
+  "host": "",
+  "user": "root",
+  "pass": "",
+  "db": "Molly_Bot",
+  "user_id": 208736120433934336,
+  "prefix": "//",
+  "timeout": 10000
+}
