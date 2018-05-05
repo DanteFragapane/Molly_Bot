@@ -72,7 +72,7 @@ molly.on('ready', () => {
     console.log('Molly loaded, trying to connect...');
     pool.getConnection((success, err) => {
       if (err) console.error(err)
-      else {console.log(success)}
+      else {console.log("Successfully connected!")}
     })
 });
 
