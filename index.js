@@ -11,7 +11,8 @@ const pool    = MySQL.createPool({
   host: config.host,
   user: config.user,
   password: config.pass,
-  database: config.db
+  database: config.db,
+  insecureAuth: true
 });
 
 let userArray       = [];
@@ -69,6 +70,10 @@ function createSingleEmbed(title, avatar, string, xp) {
 
 molly.on('ready', () => {
     console.log('Molly loaded, trying to connect...');
+    pool.getConnection((success, err) => {
+      if (err) console.error(err)
+      else {console.log(success)}
+    })
 });
 
 molly.on('message', async (message) => {
