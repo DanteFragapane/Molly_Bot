@@ -1,0 +1,12 @@
+{
+  "botAccount": true,
+  "token": "",
+  "limit": 10,
+  "host": "",
+  "user": "",
+  "pass": "",
+  "db": "",
+  "user_id": ,
+  "prefix": "//",
+  "timeout": 10000
+}
