@@ -6,7 +6,7 @@
   "user": "",
   "pass": "",
   "db": "",
-  "user_id": ,
+  "user_id": 0,
   "prefix": "//",
   "timeout": 10000
 }
