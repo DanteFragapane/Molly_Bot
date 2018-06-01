@@ -3,6 +3,8 @@ const MySQL   = require('mysql');
 const async   = require('async');
 const path    = require('path');
 
+const cmd = require(path.join(__dirname, 'commands.js'));
+
 const config  = require(path.join(__dirname, 'lib/config.js'));
 const molly   = new Discord.Client();
 const pool    = MySQL.createPool({
@@ -32,40 +34,6 @@ function shutdown() {
   console.log("Shutting down...");
   molly.destroy();
   process.exit();
-}
-
-function checkXP(ping, message) {
-  let embed;
-  pool.query('SELECT `xp` FROM xp WHERE `discord_id` = ?;', ping, (error, xp) => {
-    let username = message.mentions.members.first().user.username;
-    let avatar = message.mentions.members.first().user.displayAvatarURL;
-    let xpQ;
-    if (xp.length == 0) {
-      xpQ = 0;
-    } else {
-      xpQ = xp[0].xp;
-    }
-    embed = createSingleEmbed(username, avatar,`How much XP do I have written down for you?`, xpQ);
-    message.channel.send("Someone called?", { embed });
-  });
-}
-
-function createSingleEmbed(title, avatar, string, xp) {
-  if (avatar == null) {avatar = molly.user.displayAvatarURL}
-  const embed = {
-    "title": `${title}`,
-    "color": 12648703,
-    "thumbnail": {
-      "url": `${avatar}`,
-    },
-    "fields": [
-      {
-        "name": `${string}`,
-        "value": `${xp}`,
-      }
-    ]
-  };
-  return embed;
 }
 
 molly.on('ready', () => {
@@ -103,12 +71,12 @@ molly.on('message', async (message) => {
         timestampArray.push(message.createdTimestamp);
         sql = `INSERT INTO xp (discord_id, username, discriminator, bot, xp) VALUES (${msgAuth.id}, '${msgAuth.username}', ${msgAuth.discriminator}, ${msgAuth.bot}, 1)`;
       } else {
-        // If the user is in the DB, it doesn't mean it could be in the array, i.e. the bot shut down at all. Do that check!
+        // If the user is in the DB, it doesn't mean it could be in the array, i.e. if the bot shut down at all. Do that check!
         if (!userArray.includes(authID)) { 
           userArray.push(authID);
           timestampArray.push(message.createdTimestamp);
         }
-        // Activity log check. Make sure the message was sent after the interval, don't add XP for every message. Only messages
+        // Activity log check. Make sure the message was sent after the interval, don't add XP for every message, only messages
         // after a set time period.
         if (message.createdTimestamp - timestampArray[userArray.indexOf(authID)] >= activityTime) {
           timestampArray[userArray.indexOf(authID)] = message.createdTimestamp;
@@ -169,28 +137,12 @@ molly.on('message', async (message) => {
             if (params.length == 1 && params[0].match(/<@!?[0-9]+>/g)) {
               let namestrip = params[0].match(/\d/g).join("");
               let avatar = message.mentions.members.first().user.avatarURL;
-              checkXP(namestrip, message);
+              cmd.checkXP(pool, namestrip, message);
             } else {
               message.reply("I need only one ping for a user in order to check their XP, no more, no less!"); 
             }
           }
           break;
-        
-        // case "leader":
-        //   pool.query('SELECT `username`, `xp` FROM `xp` ORDER BY `xp` DESC LIMIT 1', (err, leader) => {
-        //     if (err) console.error(err);
-        //     console.log(leader);
-        //     console.log(leader[0]); 
-        //     let avatar = message.mentions.members.first().user.displayAvatarURL;
-        //     let embed = createSingleEmbed(username, avatar,`Who has the most XP?`, xpQ);
-        //     let leaderString = embed;
-        //     if (leader.length = 0) {
-        //       leaderString = `It appears I have no XP for anyone right now!`;
-        //     }
-        //     message.channel.send(leaderString);
-        //   });
-        //   break;
-
         default: 
           break;
       }
@@ -203,7 +155,7 @@ molly.on('message', async (message) => {
           if (params.length == 1 && params[0].match(/<@!?[0-9]+>/g)) {
             let namestrip = params[0].match(/\d/g).join("");
             let avatar = message.mentions.members.first().user.displayAvatarURL;
-            checkXP(namestrip, message);
+            cmd.checkXP(pool, namestrip, message);
           } else {
             message.reply("I need only one ping for a user in order to check their XP, no more, no less!"); 
           }
