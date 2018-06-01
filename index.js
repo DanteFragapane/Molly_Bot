@@ -122,14 +122,14 @@ molly.on('message', async (message) => {
             console.log("activityTime is being changed from " + activityTime + " to " + tempTime);
             config.timeout = tempTime;
             activityTime = tempTime;
-            message.channel.send(`activityTime has been set to ${activityTime}`);
+            message.channel.send(`activityTime has been set to ${activityTime} miliseconds.`);
           } else {
             message.reply("I need a number between 1000 and 60000, this number is in miliseconds.");
           }
           break;
         
         case "act":
-          message.channel.send(`activityTime is set to ${activityTime}`);
+          message.channel.send(`activityTime is set to ${activityTime} miliseconds.`);
           break;
 
         case "xp":
