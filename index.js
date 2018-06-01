@@ -38,10 +38,10 @@ function shutdown() {
 
 molly.on('ready', () => {
     console.log('Molly loaded, trying to connect...');
-    pool.getConnection((success, err) => {
-      if (err) console.error(err)
-      else {console.log("Successfully connected!")}
-    })
+    // pool.getConnection((success, err) => {
+    //   if (err) console.error(err)
+    //  else {console.log("Successfully connected!")}
+    //})
 });
 
 molly.on('message', async (message) => {
